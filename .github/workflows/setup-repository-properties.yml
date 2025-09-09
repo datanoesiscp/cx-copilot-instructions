@@ -72,7 +72,9 @@ jobs:
         with:
           github-token: ${{ steps.generate_token.outputs.token }}
           script: |
-            const issueBody = `## Repository Setup Required
+            const issueBody = `@github-copilot[bot] 
+            
+            ## Repository Setup Required
             
             This repository was created from the SDD template and needs custom properties configured.
             
@@ -113,7 +115,6 @@ jobs:
               repo: context.repo.repo,
               title: 'Setup Repository Properties',
               body: issueBody,
-              assignees: ['github-copilot[bot]'],
               labels: ['setup', 'automation', 'copilot-task']
             });
             
