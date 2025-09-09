@@ -220,11 +220,14 @@ jobs:
               console.log('Available logins:', repoData.repository.suggestedActors.nodes.map(n => n.login));
             }
             
-            if (copilotBot) {
-              console.log('Attempting to create issue and assign to Copilot...');
-              // Create issue and assign to Copilot using GraphQL
+            // Always try GraphQL first (with optional Copilot assignment)
+            console.log('Attempting GraphQL issue creation...');
+            let issueUrl;
+            let useGraphQL = true;
+            
+            try {
               const createMutation = `
-                mutation($repositoryId: ID!, $title: String!, $body: String!, $assigneeIds: [ID!]!) {
+                mutation($repositoryId: ID!, $title: String!, $body: String!, $assigneeIds: [ID!]) {
                   createIssue(input: {
                     repositoryId: $repositoryId,
                     title: $title,
@@ -245,19 +248,34 @@ jobs:
                 }
               `;
               
+              const assigneeIds = copilotBot ? [copilotBot.id] : [];
+              console.log('GraphQL assignee IDs:', assigneeIds);
+              
               const issueResult = await github.graphql(createMutation, {
                 repositoryId: repoData.repository.id,
                 title: 'Setup Repository Properties',
                 body: issueBody,
-                assigneeIds: [copilotBot.id]
+                assigneeIds: assigneeIds
               });
               
-              console.log('Issue created successfully:', JSON.stringify(issueResult.createIssue.issue, null, 2));
-              console.log(`Created setup issue #${issueResult.createIssue.issue.number} assigned to Copilot agent`);
-              return issueResult.createIssue.issue.url;
-            } else {
-              console.log('Using fallback: creating regular issue with labels (Copilot agent not available)');
-              // Fallback: create regular issue with labels
+              console.log('GraphQL issue created successfully:', JSON.stringify(issueResult.createIssue.issue, null, 2));
+              const assignedTo = issueResult.createIssue.issue.assignees.nodes.map(n => n.login).join(', ');
+              if (assignedTo) {
+                console.log(`✅ Created setup issue #${issueResult.createIssue.issue.number} assigned to: ${assignedTo}`);
+              } else {
+                console.log(`✅ Created setup issue #${issueResult.createIssue.issue.number} (no assignees)`);
+              }
+              issueUrl = issueResult.createIssue.issue.url;
+              
+            } catch (error) {
+              console.log('GraphQL issue creation failed:', error.message);
+              console.log('Full GraphQL error:', JSON.stringify(error, null, 2));
+              console.log('Falling back to REST API...');
+              useGraphQL = false;
+            }
+            
+            if (!useGraphQL) {
+              console.log('Creating issue via REST API...');
               const issue = await github.rest.issues.create({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -266,6 +284,8 @@ jobs:
                 labels: ['setup', 'automation', 'copilot-task']
               });
               
-              console.log(`Created setup issue #${issue.data.number} (Copilot agent not available, using labels)`);
-              return issue.data.html_url;
+              console.log(`✅ Created setup issue #${issue.data.number} via REST (can be manually assigned to Copilot)`);
+              issueUrl = issue.data.html_url;
             }
+            
+            return issueUrl;
