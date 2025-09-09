@@ -110,6 +110,7 @@ jobs:
             `;
             
             // First check if Copilot agent is available
+            console.log('Checking for Copilot agent availability...');
             const repoQuery = `
               query($owner: String!, $name: String!) {
                 repository(owner: $owner, name: $name) {
@@ -126,16 +127,46 @@ jobs:
               }
             `;
             
-            const repoData = await github.graphql(repoQuery, {
-              owner: context.repo.owner,
-              name: context.repo.repo
-            });
+            console.log(`Querying repository: ${context.repo.owner}/${context.repo.repo}`);
+            let repoData;
+            try {
+              repoData = await github.graphql(repoQuery, {
+                owner: context.repo.owner,
+                name: context.repo.repo
+              });
+            } catch (error) {
+              console.log('GraphQL query failed:', error.message);
+              console.log('Full error:', JSON.stringify(error, null, 2));
+              console.log('Falling back to regular issue creation');
+              
+              const issue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: 'Setup Repository Properties',
+                body: issueBody,
+                labels: ['setup', 'automation', 'copilot-task']
+              });
+              
+              console.log(`Created setup issue #${issue.data.number} (GraphQL failed, using fallback)`);
+              return issue.data.html_url;
+            }
+            
+            console.log('Repository ID:', repoData.repository.id);
+            console.log('Available assignable actors:', JSON.stringify(repoData.repository.suggestedActors.nodes, null, 2));
             
             const copilotBot = repoData.repository.suggestedActors.nodes.find(
               node => node.login === 'copilot-swe-agent'
             );
             
             if (copilotBot) {
+              console.log('Found Copilot agent:', JSON.stringify(copilotBot, null, 2));
+            } else {
+              console.log('Copilot agent (copilot-swe-agent) not found in suggested actors');
+              console.log('Available logins:', repoData.repository.suggestedActors.nodes.map(n => n.login));
+            }
+            
+            if (copilotBot) {
+              console.log('Attempting to create issue and assign to Copilot...');
               // Create issue and assign to Copilot using GraphQL
               const createMutation = `
                 mutation($repositoryId: ID!, $title: String!, $body: String!, $assigneeIds: [ID!]!) {
@@ -166,9 +197,11 @@ jobs:
                 assigneeIds: [copilotBot.id]
               });
               
+              console.log('Issue created successfully:', JSON.stringify(issueResult.createIssue.issue, null, 2));
               console.log(`Created setup issue #${issueResult.createIssue.issue.number} assigned to Copilot agent`);
               return issueResult.createIssue.issue.url;
             } else {
+              console.log('Using fallback: creating regular issue with labels (Copilot agent not available)');
               // Fallback: create regular issue with labels
               const issue = await github.rest.issues.create({
                 owner: context.repo.owner,
