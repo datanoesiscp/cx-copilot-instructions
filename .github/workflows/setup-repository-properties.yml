@@ -167,21 +167,25 @@ jobs:
             console.log('Token type:', usingUserToken ? 'User token' : 'Installation token');
             console.log('User token generation success:', '${{ steps.generate_user_token.outcome }}');
             const repoQuery = `
-              query($owner: String!, $name: String!) {
+              query {
                 repository(owner: $owner, name: $name) {
-                  id
                   suggestedActors(capabilities: [CAN_BE_ASSIGNED], first: 100) {
-                    nodes {
-                      login
-                      __typename
-                      ... on Bot { id }
-                      ... on User { id }
+                  nodes {
+                    login
+                    __typename
+
+                    ... on Bot {
+                      id
+                    }
+
+                    ... on User {
+                      id
                     }
                   }
                 }
               }
             `;
-            
+            console.log('GraphQL repository query:', repoQuery);           
             console.log(`Querying repository: ${context.repo.owner}/${context.repo.repo}`);
             let repoData;
             try {
@@ -248,7 +252,7 @@ jobs:
                 }
               `;
               
-              const assigneeIds = copilotBot ? [copilotBot.id] : [];
+              const assigneeIds = copilotBot ? [copilotBot.id] : ['MDQ6VXNlcjE0Njk5NzE2Nw=='];
               console.log('GraphQL assignee IDs:', assigneeIds);
               
               const issueResult = await github.graphql(createMutation, {
