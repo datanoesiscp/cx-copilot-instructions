@@ -150,11 +150,13 @@ jobs:
             const instructions = `${{ steps.read_instructions.outputs.instructions }}`;
             
             const issueBody = '## Repository Setup Required\n\n' +
-              '**TASK**: Set two custom repository properties (`role` and `spec`) using the GitHub API.\n\n' +
+              '**TASK**: Set two custom repository properties (`role` and `spec`) using GitHub CLI.\n\n' +
               `**Repository**: \`${context.repo.owner}/${context.repo.repo}\`\n\n` +
               '## Critical Instructions\n\n' +
               '⚠️ **DO NOT review the repository code or files** - there is nothing you need to understand from the codebase.\n\n' +
+              '⚠️ **DO NOT create script files** - execute the commands directly to set properties.\n\n' +
               '📋 **Read the `.github/PROPERTY_SETUP_INSTRUCTIONS.md` file** and follow it exactly.\n\n' +
+              '🔧 **Use GitHub CLI commands directly** - run the `gh api` commands, don\'t create files.\n\n' +
               '✅ **After completion**: Comment with the values you set, then close this issue.\n\n' +
               '---\n\n' +
               instructions;

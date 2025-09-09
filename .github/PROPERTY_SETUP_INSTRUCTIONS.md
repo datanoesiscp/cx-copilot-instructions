@@ -28,16 +28,24 @@ This repository was created from the SDD template and requires custom properties
 
 ## Step-by-Step Instructions
 
+⚠️ **IMPORTANT**: Execute these commands directly - DO NOT create script files. Run the commands immediately to set the properties.
+
 ### Method 1: Using GitHub CLI (Recommended)
+**Execute this command directly** (replace OWNER/REPO with actual values):
+
+For a specification repository:
 ```bash
-# For a specification repository:
 gh api --method PATCH /repos/OWNER/REPO/properties/values \
   -f properties='[{"property_name":"role","value":"spec"},{"property_name":"spec","value":null}]'
+```
 
-# For a feature repository implementing "Avanavo/example-spec":
+For a feature repository implementing "Avanavo/example-spec":
+```bash
 gh api --method PATCH /repos/OWNER/REPO/properties/values \
   -f properties='[{"property_name":"role","value":"feature"},{"property_name":"spec","value":"Avanavo/example-spec"}]'
 ```
+
+**DO NOT CREATE FILES** - run these commands directly in your terminal.
 
 ### Method 2: Using curl with GitHub API
 ```bash
