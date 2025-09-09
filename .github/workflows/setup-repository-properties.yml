@@ -167,19 +167,15 @@ jobs:
             console.log('Token type:', usingUserToken ? 'User token' : 'Installation token');
             console.log('User token generation success:', '${{ steps.generate_user_token.outcome }}');
             const repoQuery = `
-              query {
+              query($owner: String!, $name: String!) {
                 repository(owner: $owner, name: $name) {
+                  id
                   suggestedActors(capabilities: [CAN_BE_ASSIGNED], first: 100) {
-                  nodes {
-                    login
-                    __typename
-
-                    ... on Bot {
-                      id
-                    }
-
-                    ... on User {
-                      id
+                    nodes {
+                      login
+                      __typename
+                      ... on Bot { id }
+                      ... on User { id }
                     }
                   }
                 }
