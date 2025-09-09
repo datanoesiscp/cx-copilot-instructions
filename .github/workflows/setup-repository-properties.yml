@@ -141,151 +141,53 @@ jobs:
               return fallbackInstructions;
             }
       
-      - name: Create setup issue for Copilot agent
+      - name: Create setup issue and assign to Copilot
         if: steps.check_properties.outputs.has_properties == 'false'
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ steps.generate_user_token.outputs.token || steps.generate_installation_token.outputs.token }}
-          script: |
-            const instructions = `${{ steps.read_instructions.outputs.instructions }}`;
-            
-            const issueBody = '## Repository Setup Required\n\n' +
-              '**TASK**: Set two custom repository properties (`role` and `spec`) using GitHub CLI.\n\n' +
-              `**Repository**: \`${context.repo.owner}/${context.repo.repo}\`\n\n` +
-              '## Critical Instructions\n\n' +
-              '⚠️ **DO NOT review the repository code or files** - there is nothing you need to understand from the codebase.\n\n' +
-              '⚠️ **DO NOT create script files** - execute the commands directly to set properties.\n\n' +
-              '📋 **Read the `.github/PROPERTY_SETUP_INSTRUCTIONS.md` file** and follow it exactly.\n\n' +
-              '🔧 **Use GitHub CLI commands directly** - run the `gh api` commands, don\'t create files.\n\n' +
-              '✅ **After completion**: Comment with the values you set, then close this issue.\n\n' +
-              '---\n\n' +
-              instructions;
-            
-            // First check if Copilot agent is available
-            console.log('Checking for Copilot agent availability...');
-            const usingUserToken = '${{ steps.generate_user_token.outputs.token }}' !== '';
-            console.log('Token type:', usingUserToken ? 'User token' : 'Installation token');
-            console.log('User token generation success:', '${{ steps.generate_user_token.outcome }}');
-            const repoQuery = `
-              query($owner: String!, $name: String!) {
-                repository(owner: $owner, name: $name) {
-                  id
-                  suggestedActors(capabilities: [CAN_BE_ASSIGNED], first: 100) {
-                    nodes {
-                      login
-                      __typename
-                      ... on Bot { id }
-                      ... on User { id }
-                    }
-                  }
-                }
-              }
-            `;
-            console.log('GraphQL repository query:', repoQuery);           
-            console.log(`Querying repository: ${context.repo.owner}/${context.repo.repo}`);
-            let repoData;
-            try {
-              repoData = await github.graphql(repoQuery, {
-                owner: context.repo.owner,
-                name: context.repo.repo
-              });
-            } catch (error) {
-              console.log('GraphQL query failed:', error.message);
-              console.log('Full error:', JSON.stringify(error, null, 2));
-              console.log('Falling back to regular issue creation');
-              
-              const issue = await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: 'Setup Repository Properties',
-                body: issueBody,
-                labels: ['setup', 'automation', 'copilot-task']
-              });
-              
-              console.log(`Created setup issue #${issue.data.number} (GraphQL failed, using fallback)`);
-              return issue.data.html_url;
-            }
-            
-            console.log('Repository ID:', repoData.repository.id);
-            console.log('Available assignable actors:', JSON.stringify(repoData.repository.suggestedActors.nodes, null, 2));
-            
-            const copilotBot = repoData.repository.suggestedActors.nodes.find(
-              node => node.login === 'copilot-swe-agent'
-            );
-            
-            if (copilotBot) {
-              console.log('Found Copilot agent:', JSON.stringify(copilotBot, null, 2));
-            } else {
-              console.log('Copilot agent (copilot-swe-agent) not found in suggested actors');
-              console.log('Available logins:', repoData.repository.suggestedActors.nodes.map(n => n.login));
-            }
-            
-            // Always try GraphQL first (with optional Copilot assignment)
-            console.log('Attempting GraphQL issue creation...');
-            let issueUrl;
-            let useGraphQL = true;
-            
-            try {
-              const createMutation = `
-                mutation($repositoryId: ID!, $title: String!, $body: String!, $assigneeIds: [ID!]) {
-                  createIssue(input: {
-                    repositoryId: $repositoryId,
-                    title: $title,
-                    body: $body,
-                    assigneeIds: $assigneeIds
-                  }) {
-                    issue {
-                      id
-                      number
-                      url
-                      assignees(first: 10) {
-                        nodes {
-                          login
-                        }
-                      }
-                    }
-                  }
-                }
-              `;
-              
-              const assigneeIds = copilotBot ? [copilotBot.id] : ['MDQ6VXNlcjE0Njk5NzE2Nw=='];
-              console.log('GraphQL assignee IDs:', assigneeIds);
-              
-              const issueResult = await github.graphql(createMutation, {
-                repositoryId: repoData.repository.id,
-                title: 'Setup Repository Properties',
-                body: issueBody,
-                assigneeIds: assigneeIds
-              });
-              
-              console.log('GraphQL issue created successfully:', JSON.stringify(issueResult.createIssue.issue, null, 2));
-              const assignedTo = issueResult.createIssue.issue.assignees.nodes.map(n => n.login).join(', ');
-              if (assignedTo) {
-                console.log(`✅ Created setup issue #${issueResult.createIssue.issue.number} assigned to: ${assignedTo}`);
-              } else {
-                console.log(`✅ Created setup issue #${issueResult.createIssue.issue.number} (no assignees)`);
-              }
-              issueUrl = issueResult.createIssue.issue.url;
-              
-            } catch (error) {
-              console.log('GraphQL issue creation failed:', error.message);
-              console.log('Full GraphQL error:', JSON.stringify(error, null, 2));
-              console.log('Falling back to REST API...');
-              useGraphQL = false;
-            }
-            
-            if (!useGraphQL) {
-              console.log('Creating issue via REST API...');
-              const issue = await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: 'Setup Repository Properties',
-                body: issueBody,
-                labels: ['setup', 'automation', 'copilot-task']
-              });
-              
-              console.log(`✅ Created setup issue #${issue.data.number} via REST (can be manually assigned to Copilot)`);
-              issueUrl = issue.data.html_url;
-            }
-            
-            return issueUrl;
+        run: |
+          echo "Creating issue body..."
+          cat > issue_body.md << 'EOF'
+          ## Repository Setup Required
+
+          **TASK**: Set two custom repository properties (`role` and `spec`) using GitHub CLI.
+
+          **Repository**: `${{ github.repository }}`
+
+          ## Critical Instructions
+
+          ⚠️ **DO NOT review the repository code or files** - there is nothing you need to understand from the codebase.
+
+          ⚠️ **DO NOT create script files** - execute the commands directly to set properties.
+
+          📋 **Read the `.github/PROPERTY_SETUP_INSTRUCTIONS.md` file** and follow it exactly.
+
+          🔧 **Use GitHub CLI commands directly** - run the `gh api` commands, don't create files.
+
+          ✅ **After completion**: Comment with the values you set, then close this issue.
+
+          ---
+
+          ${{ steps.read_instructions.outputs.instructions }}
+          EOF
+
+          echo "Creating issue and attempting to assign to @copilot..."
+          
+          # Try to create issue and assign to copilot in one command
+          if gh issue create \
+            --title "Setup Repository Properties" \
+            --body-file issue_body.md \
+            --assignee @copilot \
+            --label "setup,automation,copilot-task"; then
+            echo "✅ Successfully created issue and assigned to @copilot"
+          else
+            echo "⚠️ Failed to assign to @copilot, creating issue without assignment..."
+            ISSUE_URL=$(gh issue create \
+              --title "Setup Repository Properties" \
+              --body-file issue_body.md \
+              --label "setup,automation,copilot-task")
+            echo "✅ Created issue: $ISSUE_URL"
+            echo "ℹ️ You can manually assign this issue to @copilot in the GitHub UI"
+          fi
+          
+          rm -f issue_body.md
+        env:
+          GH_TOKEN: ${{ steps.generate_user_token.outputs.token || steps.generate_installation_token.outputs.token }}
