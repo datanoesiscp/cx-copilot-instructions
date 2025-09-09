@@ -112,47 +112,48 @@ jobs:
               return false;
             }
       
+      - name: Read setup instructions
+        id: read_instructions
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ steps.generate_user_token.outputs.token || steps.generate_installation_token.outputs.token }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            try {
+              const instructionsPath = path.join(process.env.GITHUB_WORKSPACE, '.github', 'PROPERTY_SETUP_INSTRUCTIONS.md');
+              const instructions = fs.readFileSync(instructionsPath, 'utf8');
+              core.setOutput('instructions', instructions);
+              console.log('Successfully read setup instructions');
+              return instructions;
+            } catch (error) {
+              console.log('Failed to read instructions file:', error.message);
+              const fallbackInstructions = `# Setup Instructions
+              
+              Set repository properties:
+              - role: "spec" or "feature"  
+              - spec: null (if role=spec) or "owner/repo" (if role=feature)
+              
+              Use: PATCH /repos/${context.repo.owner}/${context.repo.repo}/properties/values
+              `;
+              core.setOutput('instructions', fallbackInstructions);
+              return fallbackInstructions;
+            }
+      
       - name: Create setup issue for Copilot agent
         if: steps.check_properties.outputs.has_properties == 'false'
         uses: actions/github-script@v7
         with:
           github-token: ${{ steps.generate_user_token.outputs.token || steps.generate_installation_token.outputs.token }}
           script: |
-            const issueBody = `## Repository Setup Required
+            const instructions = `${{ steps.read_instructions.outputs.instructions }}`;
             
-            This repository was created from the SDD template and needs custom properties configured.
-            
-            ### Task: Set Repository Properties
-            
-            Please set the following custom repository properties using the GitHub API:
-            
-            1. **role**: Set to \`spec\` if this is a specification repository, or \`feature\` if this implements another specification
-            2. **spec**: Only set this if role=feature - should contain the full repository slug of the spec this implements (e.g., "Avanavo/my-spec-repo")
-            
-            ### API Details
-            Use the GitHub REST API endpoint:
-            \`PATCH /repos/${context.repo.owner}/${context.repo.repo}/properties/values\`
-            
-            With JSON body:
-            \`\`\`json
-            {
-              "properties": [
-                { "property_name": "role", "value": "spec" },
-                { "property_name": "spec", "value": null }
-              ]
-            }
-            \`\`\`
-            
-            ### Expected Result
-            After setting properties:
-            - Comment on this issue confirming what values were set
-            - Close this issue
-            
-            ### Default Recommendation
-            Since this is a new repository, likely set \`role=spec\` unless the repository name or content clearly indicates it's a feature implementation.
-            
-            Repository: \`${context.repo.owner}/${context.repo.repo}\`
-            `;
+            const issueBody = '## Repository Setup Required\n\n' +
+              'This repository was created from the SDD template and needs custom properties configured.\n\n' +
+              `Repository: \`${context.repo.owner}/${context.repo.repo}\`\n\n` +
+              '---\n\n' +
+              instructions;
             
             // First check if Copilot agent is available
             console.log('Checking for Copilot agent availability...');
