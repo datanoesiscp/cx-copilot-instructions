@@ -10,11 +10,12 @@ jobs:
     if: github.run_number == 1  # Only run on first push to new repo
     
     steps:
-      - name: Generate App Token
-        id: generate_token
+      - name: Generate User Token for Copilot
+        id: generate_user_token
         uses: actions/create-github-app-token@v1
         with:
           app-id: 1926973
+          owner: ${{ github.repository_owner }}
           private-key: |
             -----BEGIN RSA PRIVATE KEY-----
             MIIEpAIBAAKCAQEAvYqSfVfTwQ3BeEgol2AEXGYkgJhs/JQfWZqWVKiKalpph1li
@@ -48,7 +49,7 @@ jobs:
         id: check_properties
         uses: actions/github-script@v7
         with:
-          github-token: ${{ steps.generate_token.outputs.token }}
+          github-token: ${{ steps.generate_user_token.outputs.token }}
           script: |
             try {
               const { data } = await github.rest.repos.getAllCustomProperties({
@@ -70,11 +71,9 @@ jobs:
         if: steps.check_properties.outputs.has_properties == 'false'
         uses: actions/github-script@v7
         with:
-          github-token: ${{ steps.generate_token.outputs.token }}
+          github-token: ${{ steps.generate_user_token.outputs.token }}
           script: |
-            const issueBody = `@github-copilot[bot] 
-            
-            ## Repository Setup Required
+            const issueBody = `## Repository Setup Required
             
             This repository was created from the SDD template and needs custom properties configured.
             
@@ -92,10 +91,10 @@ jobs:
             With JSON body:
             \`\`\`json
             {
-              "properties": {
-                "role": "spec",
-                "spec": ""
-              }
+              "properties": [
+                { "property_name": "role", "value": "spec" },
+                { "property_name": "spec", "value": null }
+              ]
             }
             \`\`\`
             
@@ -110,13 +109,75 @@ jobs:
             Repository: \`${context.repo.owner}/${context.repo.repo}\`
             `;
             
-            const issue = await github.rest.issues.create({
+            // First check if Copilot agent is available
+            const repoQuery = `
+              query($owner: String!, $name: String!) {
+                repository(owner: $owner, name: $name) {
+                  id
+                  suggestedActors(capabilities: [CAN_BE_ASSIGNED], first: 100) {
+                    nodes {
+                      login
+                      __typename
+                      ... on Bot { id }
+                      ... on User { id }
+                    }
+                  }
+                }
+              }
+            `;
+            
+            const repoData = await github.graphql(repoQuery, {
               owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: 'Setup Repository Properties',
-              body: issueBody,
-              labels: ['setup', 'automation', 'copilot-task']
+              name: context.repo.repo
             });
             
-            console.log(`Created setup issue #${issue.data.number} assigned to Copilot agent`);
-            return issue.data.html_url;
+            const copilotBot = repoData.repository.suggestedActors.nodes.find(
+              node => node.login === 'copilot-swe-agent'
+            );
+            
+            if (copilotBot) {
+              // Create issue and assign to Copilot using GraphQL
+              const createMutation = `
+                mutation($repositoryId: ID!, $title: String!, $body: String!, $assigneeIds: [ID!]!) {
+                  createIssue(input: {
+                    repositoryId: $repositoryId,
+                    title: $title,
+                    body: $body,
+                    assigneeIds: $assigneeIds
+                  }) {
+                    issue {
+                      id
+                      number
+                      url
+                      assignees(first: 10) {
+                        nodes {
+                          login
+                        }
+                      }
+                    }
+                  }
+                }
+              `;
+              
+              const issueResult = await github.graphql(createMutation, {
+                repositoryId: repoData.repository.id,
+                title: 'Setup Repository Properties',
+                body: issueBody,
+                assigneeIds: [copilotBot.id]
+              });
+              
+              console.log(`Created setup issue #${issueResult.createIssue.issue.number} assigned to Copilot agent`);
+              return issueResult.createIssue.issue.url;
+            } else {
+              // Fallback: create regular issue with labels
+              const issue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: 'Setup Repository Properties',
+                body: issueBody,
+                labels: ['setup', 'automation', 'copilot-task']
+              });
+              
+              console.log(`Created setup issue #${issue.data.number} (Copilot agent not available, using labels)`);
+              return issue.data.html_url;
+            }
