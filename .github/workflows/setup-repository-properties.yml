@@ -150,8 +150,12 @@ jobs:
             const instructions = `${{ steps.read_instructions.outputs.instructions }}`;
             
             const issueBody = '## Repository Setup Required\n\n' +
-              'This repository was created from the SDD template and needs custom properties configured.\n\n' +
-              `Repository: \`${context.repo.owner}/${context.repo.repo}\`\n\n` +
+              '**TASK**: Set two custom repository properties (`role` and `spec`) using the GitHub API.\n\n' +
+              `**Repository**: \`${context.repo.owner}/${context.repo.repo}\`\n\n` +
+              '## Critical Instructions\n\n' +
+              '⚠️ **DO NOT review the repository code or files** - there is nothing you need to understand from the codebase.\n\n' +
+              '📋 **Read the `.github/PROPERTY_SETUP_INSTRUCTIONS.md` file** and follow it exactly.\n\n' +
+              '✅ **After completion**: Comment with the values you set, then close this issue.\n\n' +
               '---\n\n' +
               instructions;
             
