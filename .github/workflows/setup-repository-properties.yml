@@ -14,8 +14,35 @@ jobs:
         id: generate_token
         uses: actions/create-github-app-token@v1
         with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          app-id: 1926973
+          private-key: |
+            -----BEGIN RSA PRIVATE KEY-----
+            MIIEpAIBAAKCAQEAvYqSfVfTwQ3BeEgol2AEXGYkgJhs/JQfWZqWVKiKalpph1li
+            PIe3kMo97zO33lWb4rFMS6V3ztI5AGHpNEPmzvcSmuQaxgCojBukQIjE+InP37Ko
+            zZU5crppsKygft3l+8IqBk+byeBadbtBd1c60FdNZATVqWjspGy/8CzYjdA46X3m
+            pTavliBbXQWb57N5r9Ol8d/LPomfnXaRwVxzde0Q9LELG9qp0co7+3YPxHbGHHTH
+            QFHP4YE50cJFpJLUzfr+6kLcf5BhxhGSupDxo96Yd5sVeDrExpDphBPvra3vY8jL
+            bRLYJKDGr1PXErd9KVDHwki/V3ceAOegM4iWRwIDAQABAoIBADbx0qFPMm1GRY1O
+            raWkCd+XJIG6re1SKvxYmbeU2/sUln7L5HRTi10Ho4iR330uJ/BBITLUlrR3sFpy
+            B55FCMV6TgRkl3ZKfpGO+cBTZXX+zSm1qsVdureNXlH+2M+uF5sxn+kQbsLIrLBw
+            RfwIZ1450I9r71watG69r6458dS5xdsAfO4EOqVgKfRVjS8lA1+KyG9ybmacZVg0
+            vOGISZiCbXU3HLpxG+gANc0sDhX8QJiHIIlx1dHIZvr4CEwBUriSAhER7g63Ho5G
+            BkacKd/ihS3D2Q0JhPKpVjIu4diB4xqQhsXtZ8rRQvVn/vbaV/nuZUJmkvZTseac
+            nenX0LECgYEA5Dx90QWx8xT1HypY/0ZTxghJm+omEwL+bj5snPuvW1i47WKAF29o
+            3iW1SzMFRTn6a/dxcfZtSfBgIwO6m0FUpKhn4d3YiSc8nOcr6BHpB/SyAHsQftSl
+            iHAtREVFoW3aeX5I1ag2TPfxZNgy9Z2vDAPVqh98UIw9OyMqZR89DfUCgYEA1JkU
+            WhjHYBIYnyAcuy65mcZXWJ0nFeymVRJ45T7GTexDBBIyb1PA6q1LAV2cpi9BNy39
+            vXhuP6kyOBjGstKUT6crGqKpq5knT55X9H5rRLHIdZgcbpQ9mAUF0f04tGYZUhm7
+            /LBnZRdFvYr7MwYkZ7XLVJqG79G9PQmUh2VkUcsCgYEA0mtmv7+VaPuoZdxAAtHO
+            yGO5oXJFOf/nnLIWpsBv0jLBA7JtT63aK/zt4O+f60vhsYqG37+G0MU5jO6SKzMX
+            G1tbsuQ6D3DKNAn489MXWctiFIlhEt1v45MwWKHY6VSDOMGR2tFjhqCMwCGHEeUX
+            jmc2pMq0bPpuNUhdfK9JNcUCgYEAqPoLHRl4zrlTbJbffz/CMaFeJ4axXFG+WvvV
+            r5BXmfPhyEiWYboWKfEXHrzDF6uTkEIz3fbs2hinW8MFm3iYfT8HmaIUbdnLTxMy
+            IZihtfYAuMbwQkv9MOk9GQzFl01XbtQZgNzNMaJvwhnHU2TcZrouJM611cPFP9Bv
+            h7ZlKEUCgYAIL/jcDGu+U2BVYwRUHDPK04zBzVhSZN13ExsGm+J35VTdv+rMIZUQ
+            c/5EGCC6BLFdztYzZJ2HD0k9YWZhrL3MHoW1BtXsY7x6KU9IWiet4nAu+n+JWnRP
+            7J7voEI45xex6/SMMI7eBOKVFFXLV2B9XP7hyTzg3SVv4lOSYGR9jg==
+            -----END RSA PRIVATE KEY-----
       
       - name: Check if properties already exist
         id: check_properties
