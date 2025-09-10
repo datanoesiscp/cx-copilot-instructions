@@ -49,14 +49,22 @@ jobs:
             7J7voEI45xex6/SMMI7eBOKVFFXLV2B9XP7hyTzg3SVv4lOSYGR9jg==
             -----END RSA PRIVATE KEY-----
       
-      - name: Debug Token Generation
+      - name: Debug Token Generation and Permissions
         run: |
           echo "Repository owner: ${{ github.repository_owner }}"
           echo "App ID: 1926973"
           echo "Token generated: ${{ steps.generate_user_token.outputs.token != '' }}"
           echo "Token length: ${#GITHUB_TOKEN}"
+          
+          # Check what permissions this token has
+          echo "Checking token permissions..."
+          gh api /user --jq '{login: .login, type: .type}'
+          
+          # Try to check app installation permissions
+          echo "Checking app installation..."
+          gh api /repos/${{ github.repository }}/installation --jq '{id: .id, permissions: .permissions}' || echo "Failed to get installation permissions"
         env:
-          GITHUB_TOKEN: ${{ steps.generate_user_token.outputs.token }}
+          GH_TOKEN: ${{ steps.generate_user_token.outputs.token }}
       
       - name: Check if properties already exist
         id: check_properties
