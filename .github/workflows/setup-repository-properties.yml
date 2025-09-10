@@ -1,13 +1,17 @@
 name: Setup Repository Properties
 
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
+    inputs:
+      force_run:
+        description: 'Force run even if properties exist'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   setup-properties:
     runs-on: ubuntu-latest
-    if: github.run_number == 1  # Only run on first push to new repo
     
     steps:
       - name: Checkout repository
@@ -64,7 +68,7 @@ jobs:
           echo "Checking app installation..."
           gh api /repos/${{ github.repository }}/installation --jq '{id: .id, permissions: .permissions}' || echo "Failed to get installation permissions"
         env:
-          GH_TOKEN: ${{ steps.generate_user_token.outputs.token }}
+          GH_TOKEN: ${{ steps.generate_user_token.outputs.token || github.token }}
       
       - name: Check if properties already exist
         id: check_properties
@@ -80,49 +84,32 @@ jobs:
             echo "❌ No 'role' property found - setup needed"
           fi
         env:
-          GH_TOKEN: ${{ steps.generate_user_token.outputs.token }}
+          GH_TOKEN: ${{ steps.generate_user_token.outputs.token || github.token }}
       
-      - name: Read issue template
-        id: read_template
+
+      - name: Set repository properties automatically
+        if: steps.check_properties.outputs.has_properties == 'false' || github.event.inputs.force_run == 'true'
         run: |
-          TEMPLATE_CONTENT=$(sed "s|{{ repository }}|${{ github.repository }}|g" .github/ISSUE_TEMPLATE.md)
-          echo "template<<EOF" >> $GITHUB_OUTPUT
-          echo "$TEMPLATE_CONTENT" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-      
-      - name: Create setup issue and assign to Copilot
-        if: steps.check_properties.outputs.has_properties == 'false'
-        run: |
-          echo "Creating issue with template..."
+          echo "Setting repository properties automatically..."
           
-          # Get the authenticated user as fallback assignee
-          AUTHENTICATED_USER=$(gh api user --jq '.login')
-          echo "Authenticated user: $AUTHENTICATED_USER"
+          # Determine the role - default to 'spec' for new repositories
+          REPO_ROLE="spec"
+          REPO_SPEC="null"
           
-          # Try to create issue and assign to copilot first
-          if gh issue create \
-            --title "Setup Repository Properties" \
-            --body "${{ steps.read_template.outputs.template }}" \
-            --assignee @copilot \
-            --label "setup,automation,copilot-task"; then
-            echo "✅ Successfully created issue and assigned to @copilot"  
+          echo "Setting properties:"
+          echo "  role: $REPO_ROLE"
+          echo "  spec: $REPO_SPEC"
+          
+          # Set the properties using GitHub API
+          if gh api --method PATCH "/repos/${{ github.repository }}/properties/values" \
+            -f properties='[{"property_name":"role","value":"'$REPO_ROLE'"},{"property_name":"spec","value":'$REPO_SPEC'}]'; then
+            echo "✅ Successfully set repository properties"
+            echo "Repository is configured as a specification repository (role=spec, spec=null)"
           else
-            echo "⚠️ Failed to assign to @copilot, trying to assign to authenticated user..."
-            if gh issue create \
-              --title "Setup Repository Properties" \
-              --body "${{ steps.read_template.outputs.template }}" \
-              --assignee "$AUTHENTICATED_USER" \
-              --label "setup,automation,copilot-task"; then
-              echo "✅ Successfully created issue and assigned to $AUTHENTICATED_USER"
-            else
-              echo "⚠️ Failed to assign to user, creating issue without assignment..."
-              ISSUE_URL=$(gh issue create \
-                --title "Setup Repository Properties" \
-                --body "${{ steps.read_template.outputs.template }}" \
-                --label "setup,automation,copilot-task")
-              echo "✅ Created issue: $ISSUE_URL"
-              echo "ℹ️ You can manually assign this issue in the GitHub UI"
-            fi
+            echo "❌ Failed to set repository properties"
+            echo "This might be due to insufficient permissions or missing custom property definitions"
+            echo "Please check that custom properties 'role' and 'spec' are defined in your organization settings"
+            exit 1
           fi
         env:
-          GH_TOKEN: ${{ steps.generate_user_token.outputs.token }}
+          GH_TOKEN: ${{ steps.generate_user_token.outputs.token || github.token }}
