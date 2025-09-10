@@ -77,7 +77,7 @@ jobs:
       - name: Read issue template
         id: read_template
         run: |
-          TEMPLATE_CONTENT=$(sed "s/{{ repository }}/${{ github.repository }}/g" .github/ISSUE_TEMPLATE.md)
+          TEMPLATE_CONTENT=$(sed "s|{{ repository }}|${{ github.repository }}|g" .github/ISSUE_TEMPLATE.md)
           echo "template<<EOF" >> $GITHUB_OUTPUT
           echo "$TEMPLATE_CONTENT" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
