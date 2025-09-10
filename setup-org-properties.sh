@@ -92,6 +92,14 @@ else
     SPEC_EXISTS=false
 fi
 
+if echo "$EXISTING_PROPERTIES" | grep -q "^instructions$"; then
+    echo "✅ Property 'instructions' already exists"
+    INSTRUCTIONS_EXISTS=true
+else
+    echo "❌ Property 'instructions' does not exist"
+    INSTRUCTIONS_EXISTS=false
+fi
+
 echo ""
 
 # Function to create property using the correct API endpoint
@@ -114,52 +122,72 @@ create_property() {
     fi
 }
 
-# Create role property if it doesn't exist
-if [ "$ROLE_EXISTS" = false ]; then
-    echo -e "${YELLOW}Step 2: Creating 'role' property...${NC}"
-    
-    ROLE_PAYLOAD='{
-        "value_type": "single_select",
-        "description": "Repository type in SDD workflow (spec or feature)",
-        "required": true,
-        "default_value": "spec",
-        "allowed_values": ["spec", "feature"]
-    }'
-    
-    echo "Creating role property with values: spec, feature"
-    
-    if ! create_property "role" "$ROLE_PAYLOAD"; then
-        exit 1
-    fi
+# Create or update role property (upsert)
+echo -e "${YELLOW}Step 2: Creating/updating 'role' property...${NC}"
+
+ROLE_PAYLOAD='{
+    "value_type": "single_select",
+    "description": "Repository type in SDD workflow (spec or feature)",
+    "required": false,
+    "allowed_values": ["spec", "feature"]
+}'
+
+if [ "$ROLE_EXISTS" = true ]; then
+    echo "Updating existing role property (making it non-required)"
 else
-    echo -e "${YELLOW}Step 2: Skipping 'role' property (already exists)${NC}"
+    echo "Creating new role property with values: spec, feature (non-required)"
+fi
+
+if ! create_property "role" "$ROLE_PAYLOAD"; then
+    exit 1
 fi
 
 echo ""
 
-# Create spec property if it doesn't exist
-if [ "$SPEC_EXISTS" = false ]; then
-    echo -e "${YELLOW}Step 3: Creating 'spec' property...${NC}"
-    
-    SPEC_PAYLOAD='{
-        "value_type": "string",
-        "description": "Reference to specification repository (owner/repo format, null for spec repos)",
-        "required": false
-    }'
-    
-    echo "Creating spec property (string type, optional)"
-    
-    if ! create_property "spec" "$SPEC_PAYLOAD"; then
-        exit 1
-    fi
+# Create or update spec property (upsert)
+echo -e "${YELLOW}Step 3: Creating/updating 'spec' property...${NC}"
+
+SPEC_PAYLOAD='{
+    "value_type": "string",
+    "description": "Reference to specification repository (owner/repo format, null for spec repos)",
+    "required": false
+}'
+
+if [ "$SPEC_EXISTS" = true ]; then
+    echo "Updating existing spec property"
 else
-    echo -e "${YELLOW}Step 3: Skipping 'spec' property (already exists)${NC}"
+    echo "Creating new spec property (string type, optional)"
+fi
+
+if ! create_property "spec" "$SPEC_PAYLOAD"; then
+    exit 1
+fi
+
+echo ""
+
+# Create or update instructions property (upsert)
+echo -e "${YELLOW}Step 4: Creating/updating 'instructions' property...${NC}"
+
+INSTRUCTIONS_PAYLOAD='{
+    "value_type": "string",
+    "description": "Source of truth repository for SDD instructions and templates (owner/repo format)",
+    "required": false
+}'
+
+if [ "$INSTRUCTIONS_EXISTS" = true ]; then
+    echo "Updating existing instructions property"
+else
+    echo "Creating new instructions property (string type, optional)"
+fi
+
+if ! create_property "instructions" "$INSTRUCTIONS_PAYLOAD"; then
+    exit 1
 fi
 
 echo ""
 
 # Verify the properties were created
-echo -e "${YELLOW}Step 4: Verifying properties...${NC}"
+echo -e "${YELLOW}Step 5: Verifying properties...${NC}"
 
 FINAL_PROPERTIES=$(gh api "orgs/$ORG/properties/schema" \
     -H "Accept: application/vnd.github+json" \
@@ -173,11 +201,12 @@ echo ""
 echo -e "${GREEN}✅ Custom properties setup completed!${NC}"
 echo ""
 echo -e "${BLUE}Properties defined:${NC}"
-echo "• role: single_select (spec|feature) - required, default: spec"
+echo "• role: single_select (spec|feature) - optional, no default"
 echo "• spec: string - optional, default: null"
+echo "• instructions: string - optional, source of truth repository"
 echo ""
 echo -e "${BLUE}Usage in repositories:${NC}"
-echo "• Spec repositories: role=spec, spec=null"
-echo "• Feature repositories: role=feature, spec=owner/spec-repo"
+echo "• Spec repositories: role=spec, spec=null, instructions=owner/sdd-template"
+echo "• Feature repositories: role=feature, spec=owner/spec-repo, instructions=owner/sdd-template"
 echo ""
 echo -e "${GREEN}You can now run the repository setup workflow!${NC}"

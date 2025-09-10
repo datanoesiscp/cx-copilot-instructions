@@ -70,22 +70,44 @@ jobs:
           REPO_ROLE="spec"
           REPO_SPEC="null"
           
+          # Set instructions property to the template repository (source of truth)
+          # Try to get template repository info from GitHub API
+          echo "Attempting to identify template repository..."
+          TEMPLATE_REPO=$(gh api "/repos/${{ github.repository }}" --jq '.template_repository.full_name // empty' 2>/dev/null || echo "")
+          
+          if [ -n "$TEMPLATE_REPO" ] && [ "$TEMPLATE_REPO" != "null" ]; then
+            REPO_INSTRUCTIONS="$TEMPLATE_REPO"
+            echo "✅ Detected template repository: $TEMPLATE_REPO"
+          else
+            REPO_INSTRUCTIONS=""
+            echo "⚠️ Could not detect template repository - instructions property will be left unset"
+            echo "   Manual configuration may be required"
+          fi
+          
           echo "Setting properties:"
           echo "  role: $REPO_ROLE"
           echo "  spec: $REPO_SPEC"
+          echo "  instructions: ${REPO_INSTRUCTIONS:-"(unset)"}"
           
           # Create JSON payload for properties
-          JSON_PAYLOAD='{"properties":[{"property_name":"role","value":"'$REPO_ROLE'"},{"property_name":"spec","value":'$REPO_SPEC'}]}'
+          if [ -n "$REPO_INSTRUCTIONS" ]; then
+            JSON_PAYLOAD='{"properties":[{"property_name":"role","value":"'$REPO_ROLE'"},{"property_name":"spec","value":'$REPO_SPEC'},{"property_name":"instructions","value":"'$REPO_INSTRUCTIONS'"}]}'
+          else
+            JSON_PAYLOAD='{"properties":[{"property_name":"role","value":"'$REPO_ROLE'"},{"property_name":"spec","value":'$REPO_SPEC'}]}'
+          fi
           echo "Setting properties with payload: $JSON_PAYLOAD"
           
           # Set the properties using GitHub API
           if echo "$JSON_PAYLOAD" | gh api --method PATCH "/repos/${{ github.repository }}/properties/values" --input -; then
             echo "✅ Successfully set repository properties"
-            echo "Repository is configured as a specification repository (role=spec, spec=null)"
+            echo "Repository is configured as a specification repository:"
+            echo "  - role=spec (specification repository)"
+            echo "  - spec=null (no parent spec)"
+            echo "  - instructions=$REPO_INSTRUCTIONS (source of truth)"
           else
             echo "❌ Failed to set repository properties"
             echo "This might be due to insufficient permissions or missing custom property definitions"
-            echo "Please check that custom properties 'role' and 'spec' are defined in your organization settings"
+            echo "Please check that custom properties 'role', 'spec', and 'instructions' are defined in your organization settings"
             exit 1
           fi
         env:
