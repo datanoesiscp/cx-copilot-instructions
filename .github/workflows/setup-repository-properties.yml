@@ -1,6 +1,8 @@
 name: Setup Repository Properties
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       force_run:
@@ -12,6 +14,7 @@ on:
 jobs:
   setup-properties:
     runs-on: ubuntu-latest
+    if: github.run_number == 1 || github.event_name == 'workflow_dispatch'
     
     steps:
       - name: Checkout repository
