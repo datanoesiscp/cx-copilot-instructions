@@ -71,9 +71,12 @@ jobs:
           echo "  role: $REPO_ROLE"
           echo "  spec: $REPO_SPEC"
           
+          # Create JSON payload for properties
+          JSON_PAYLOAD='{"properties":[{"property_name":"role","value":"'$REPO_ROLE'"},{"property_name":"spec","value":'$REPO_SPEC'}]}'
+          echo "Setting properties with payload: $JSON_PAYLOAD"
+          
           # Set the properties using GitHub API
-          if gh api --method PATCH "/repos/${{ github.repository }}/properties/values" \
-            -f properties='[{"property_name":"role","value":"'$REPO_ROLE'"},{"property_name":"spec","value":'$REPO_SPEC'}]'; then
+          if echo "$JSON_PAYLOAD" | gh api --method PATCH "/repos/${{ github.repository }}/properties/values" --input -; then
             echo "✅ Successfully set repository properties"
             echo "Repository is configured as a specification repository (role=spec, spec=null)"
           else
