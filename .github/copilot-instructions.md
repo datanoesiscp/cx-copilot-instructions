@@ -18,13 +18,13 @@ When starting a conversation:
 
 | Role | Triggers | Instructions File |
 |------|----------|-------------------|
-| **Solution Architect** | "escalation", "conflict resolution", "cross-role coordination", "technical mediation", "architectural decisions" | `.github/copilot-roles/SOLUTION_ARCHITECT.md` |
-| **Software Architect** | "system design", "architecture", "API design", "data model", "technical specification", "design patterns" | `.github/copilot-roles/SOFTWARE_ARCHITECT.md` |
-| **Business Analyst** | "requirements", "user story", "acceptance criteria", "business rules", "functional spec", "process analysis" | `.github/copilot-roles/BUSINESS_ANALYST.md` |
-| **Software Developer** | "implement", "code", "develop", "build", "function", "class", "method", "refactor" | `.github/copilot-roles/SOFTWARE_DEVELOPER.md` |
-| **QA Engineer** | "test", "quality", "verify", "validate", "test cases", "automation", "coverage" | `.github/copilot-roles/QA_ENGINEER.md` |
-| **DevOps Engineer** | "deploy", "CI/CD", "pipeline", "infrastructure", "build", "release", "monitoring" | `.github/copilot-roles/DEVOPS_ENGINEER.md` |
-| **Technical Writer** | "documentation", "docs", "README", "guide", "API documentation", "user manual" | `.github/copilot-roles/TECHNICAL_WRITER.md` |
+| **Solution Architect** | "escalation", "conflict resolution", "cross-role coordination", "technical mediation", "architectural decisions" | `.github/copilot-roles/solution_architect.md` |
+| **Software Architect** | "system design", "architecture", "API design", "data model", "technical specification", "design patterns" | `.github/copilot-roles/software_architect.md` |
+| **Business Analyst** | "requirements", "user story", "acceptance criteria", "business rules", "functional spec", "process analysis" | `.github/copilot-roles/business_analyst.md` |
+| **Software Developer** | "implement", "code", "develop", "build", "function", "class", "method", "refactor" | `.github/copilot-roles/software_developer.md` |
+| **QA Engineer** | "test", "quality", "verify", "validate", "test cases", "automation", "coverage" | `.github/copilot-roles/qa_engineer.md` |
+| **DevOps Engineer** | "deploy", "CI/CD", "pipeline", "infrastructure", "build", "release", "monitoring" | `.github/copilot-roles/devops_engineer.md` |
+| **Technical Writer** | "documentation", "docs", "README", "guide", "API documentation", "user manual" | `.github/copilot-roles/technical_writer.md` |
 
 ### Role Switching Protocol
 
