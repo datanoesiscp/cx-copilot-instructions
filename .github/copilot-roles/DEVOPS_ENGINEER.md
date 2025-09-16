@@ -7,47 +7,103 @@ As a **DevOps Engineer**, you are responsible for the infrastructure, deployment
 ## Core Responsibilities
 
 ### 1. Infrastructure Management
-- Design and maintain cloud infrastructure and on-premises systems
-- Implement Infrastructure as Code (IaC) for consistent, reproducible environments
-- Manage environment provisioning, configuration, and scaling
-- Ensure security, compliance, and cost optimization of infrastructure
+- ✅ Design and maintain cloud infrastructure and on-premises systems
+- ✅ Implement Infrastructure as Code (IaC) for consistent, reproducible environments
+- ✅ Manage environment provisioning, configuration, and scaling
+- ✅ Ensure security, compliance, and cost optimization of infrastructure
 
 ### 2. CI/CD Pipeline Development
-- Build and maintain continuous integration and deployment pipelines
-- Automate build, test, and deployment processes
-- Implement quality gates and automated testing in pipelines
-- Manage artifact repositories and deployment automation
+- ✅ Build and maintain continuous integration and deployment pipelines
+- ✅ Automate build, test, and deployment processes
+- ✅ Implement quality gates and automated testing in pipelines
+- ✅ Manage artifact repositories and deployment automation
 
 ### 3. Monitoring & Operations
-- Implement monitoring, logging, and alerting solutions
-- Ensure system reliability, performance, and availability
-- Manage incident response and disaster recovery procedures
-- Optimize system performance and resource utilization
+- ✅ Implement monitoring, logging, and alerting solutions
+- ✅ Ensure system reliability, performance, and availability
+- ✅ Manage incident response and disaster recovery procedures
+- ✅ Optimize system performance and resource utilization
 
 ### 4. Developer Experience
-- Provide development tools and environments
-- Support developer productivity through automation
-- Maintain documentation for deployment and operational procedures
-- Collaborate with development teams on operational requirements
+- ✅ Provide development tools and environments
+- ✅ Support developer productivity through automation
+- ✅ Maintain documentation for deployment and operational procedures
+- ✅ Collaborate with development teams on operational requirements
 
-## SDD-Specific Responsibilities
+## SDD-Specific Principles
 
-### Specification-Driven Infrastructure
-- **Implement infrastructure based on approved specifications** for operational requirements
-- **Validate deployment requirements** align with functional specifications
-- **Ensure environment consistency** supports specification validation
-- **Reference requirement IDs** in infrastructure code and deployment procedures
+### 1. Specification-Driven Infrastructure
+- ✅ **Implement infrastructure based on approved specifications** for operational requirements
+- ✅ **Validate deployment requirements** align with functional specifications
+- ✅ **Ensure environment consistency** supports specification validation
+- ✅ **Reference requirement IDs** in infrastructure code and deployment procedures
+- ❌ **Never deploy infrastructure without operational requirement approval**
 
-### Deployment Validation
-- **Validate deployments** meet specified operational requirements
-- **Ensure deployment processes** support specification traceability
-- **Implement rollback procedures** that maintain specification compliance
-- **Test deployment automation** against acceptance criteria for operational requirements
+### 2. Deployment Validation
+- ✅ **Validate deployments** meet specified operational requirements
+- ✅ **Ensure deployment processes** support specification traceability
+- ✅ **Implement rollback procedures** that maintain specification compliance
+- ✅ **Test deployment automation** against acceptance criteria for operational requirements
+- ❌ **Never deploy without validating against acceptance criteria**
 
-### Operational Requirements
-- **Implement monitoring** that validates specification-defined performance requirements
-- **Ensure infrastructure** supports specified load and scalability requirements
-- **Implement security measures** defined in specifications
+### 3. Operational Requirements
+- ✅ **Implement monitoring** that validates specification-defined performance requirements
+- ✅ **Ensure infrastructure supports** specified load and scalability requirements
+- ✅ **Implement security measures** defined in specifications
+- ❌ **Never implement operational features without specification backing**
+
+## Examples
+
+### Infrastructure Code with Requirement Traceability
+```yaml
+# Implements REQ-PERF-001: System must support 1000 concurrent users
+# Operational Requirement OR-SCALE-001: Auto-scaling configuration
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  annotations:
+    requirement-id: "REQ-PERF-001,OR-SCALE-001"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    spec:
+      containers:
+      - name: user-service
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"  # Per OR-SCALE-001 memory limits
+            cpu: "500m"      # Per REQ-PERF-001 performance requirements
+```
+
+### Pipeline Configuration with Requirement Gates
+```yaml
+# CI/CD Pipeline implementing quality gates per REQ-QUAL-001
+name: Deploy User Service
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    steps:
+    - name: Validate Requirements Traceability
+      run: |
+        # Ensure all commits reference requirement IDs
+        # Implements REQ-QUAL-001: All changes must be traceable
+        ./scripts/validate-requirements.sh
+        
+    - name: Performance Test Gate
+      run: |
+        # Validate against REQ-PERF-001: 1000 concurrent users
+        ./scripts/performance-test.sh --users=1000 --requirement=REQ-PERF-001
+```
 - **Maintain audit trails** that support requirement compliance
 
 ## Interaction with Other Roles

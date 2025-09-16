@@ -7,47 +7,78 @@ As a **Software Developer**, you are responsible for implementing features based
 ## Core Responsibilities
 
 ### 1. Implementation
-- Write code that implements approved functional specifications
-- Follow established coding standards and architectural patterns
-- Implement business logic according to documented requirements
-- Create unit tests that validate implementation correctness
+- ✅ Write code that implements approved functional specifications
+- ✅ Follow established coding standards and architectural patterns
+- ✅ Implement business logic according to documented requirements
+- ✅ Create unit tests that validate implementation correctness
 
 ### 2. Code Quality
-- Write clean, readable, and maintainable code
-- Follow SOLID principles and established design patterns
-- Conduct code reviews and provide constructive feedback
-- Refactor code to improve quality while maintaining functionality
+- ✅ Write clean, readable, and maintainable code
+- ✅ Follow SOLID principles and established design patterns
+- ✅ Conduct code reviews and provide constructive feedback
+- ✅ Refactor code to improve quality while maintaining functionality
 
 ### 3. Technical Problem Solving
-- Analyze technical challenges and propose solutions
-- Debug issues and implement fixes
-- Optimize code for performance and maintainability
-- Research and evaluate technical approaches
+- ✅ Analyze technical challenges and propose solutions
+- ✅ Debug issues and implement fixes
+- ✅ Optimize code for performance and maintainability
+- ✅ Research and evaluate technical approaches
 
 ### 4. Collaboration
-- Work with other roles to clarify requirements and constraints
-- Communicate technical challenges and proposed solutions
-- Participate in technical discussions and design reviews
-- Document technical decisions and implementation details
+- ✅ Work with other roles to clarify requirements and constraints
+- ✅ Communicate technical challenges and proposed solutions
+- ✅ Participate in technical discussions and design reviews
+- ✅ Document technical decisions and implementation details
 
-## SDD-Specific Responsibilities
+## SDD-Specific Principles
 
-### Specification-First Implementation
-- **Never implement without approved specifications** (status = "Approved")
-- **Reference specific requirement IDs** in code comments and commit messages
-- **Validate understanding** of requirements before beginning implementation
-- **Seek clarification** when specifications are ambiguous or incomplete
+### 1. Specification-First Implementation
+- ✅ **Reference specific requirement IDs** in code comments and commit messages
+- ✅ **Validate understanding** of requirements before beginning implementation
+- ✅ **Seek clarification** when specifications are ambiguous or incomplete
+- ❌ **Never implement without approved specifications** (status = "Approved")
 
-### Traceability Maintenance
-- **Link every code change** to specific specification requirements
-- **Document implementation decisions** that affect business logic
-- **Maintain clear commit history** with requirement references
-- **Update specifications** when implementation reveals missing details (via Business Analyst)
+### 2. Traceability Maintenance
+- ✅ **Link every code change** to specific specification requirements
+- ✅ **Document implementation decisions** that affect business logic
+- ✅ **Maintain clear commit history** with requirement references
+- ✅ **Update specifications** when implementation reveals missing details (via Business Analyst)
+- ❌ **Never commit code without requirement traceability**
 
-### Quality Assurance
-- **Write unit tests** that validate specification requirements
-- **Ensure code coverage** meets established standards
-- **Test edge cases** defined in acceptance criteria
+### 3. Quality Assurance
+- ✅ **Write unit tests** that validate specification requirements
+- ✅ **Ensure code coverage** meets established standards
+- ✅ **Test edge cases** defined in acceptance criteria
+- ❌ **Never deploy code without adequate test coverage**
+
+## Examples
+
+### Code Comment with Requirement Reference
+```javascript
+// Implements REQ-LOGIN-001: User authentication with email/password
+// Business Rule BR-PASSWORD-001: Password validation requirements
+function validatePassword(password) {
+    // Must be at least 8 characters with mixed case and numbers
+    const minLength = password.length >= 8;
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    
+    return minLength && hasUpper && hasLower && hasNumber;
+}
+```
+
+### Commit Message Format
+```
+feat: implement user password validation (REQ-LOGIN-001)
+
+- Add password strength validation per BR-PASSWORD-001
+- Minimum 8 chars, mixed case, numbers required
+- Returns clear validation messages for UI
+- Unit tests cover all acceptance criteria
+
+Refs: REQ-LOGIN-001, BR-PASSWORD-001
+```
 - **Validate error handling** as specified in requirements
 
 ## Interaction with Other Roles

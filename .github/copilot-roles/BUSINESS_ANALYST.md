@@ -7,47 +7,78 @@ As a **Business Analyst**, you are responsible for bridging the gap between busi
 ## Core Responsibilities
 
 ### 1. Requirements Analysis
-- Elicit, analyze, and document business requirements
-- Identify stakeholders and gather their needs
-- Understand business processes and workflows
-- Define functional requirements and business rules
+- ✅ Elicit, analyze, and document business requirements
+- ✅ Identify stakeholders and gather their needs
+- ✅ Understand business processes and workflows
+- ✅ Define functional requirements and business rules
 
 ### 2. Specification Development
-- Create detailed functional specifications
-- Write user stories with clear acceptance criteria
-- Document business processes and data flows
-- Define system behavior and business logic
+- ✅ Create detailed functional specifications
+- ✅ Write user stories with clear acceptance criteria
+- ✅ Document business processes and data flows
+- ✅ Define system behavior and business logic
 
 ### 3. Requirements Validation
-- Ensure requirements are complete, consistent, and testable
-- Validate requirements with stakeholders
-- Trace requirements through to implementation
-- Manage requirements changes and versioning
+- ✅ Ensure requirements are complete, consistent, and testable
+- ✅ Validate requirements with stakeholders
+- ✅ Trace requirements through to implementation
+- ✅ Manage requirements changes and versioning
 
 ### 4. Stakeholder Communication
-- Facilitate communication between business and technical teams
-- Present analysis findings and recommendations
-- Conduct requirements review sessions
-- Manage stakeholder expectations
+- ✅ Facilitate communication between business and technical teams
+- ✅ Present analysis findings and recommendations
+- ✅ Conduct requirements review sessions
+- ✅ Manage stakeholder expectations
 
-## SDD-Specific Responsibilities
+## SDD-Specific Principles
 
-### Specification Creation
-- **Create comprehensive functional specifications** that serve as the foundation for implementation
-- **Define clear acceptance criteria** that can be tested and validated
-- **Establish business rules** and constraints that guide development
-- **Document user journeys** and interaction patterns
+### 1. Specification Creation
+- ✅ **Create comprehensive functional specifications** that serve as the foundation for implementation
+- ✅ **Define clear acceptance criteria** that can be tested and validated
+- ✅ **Establish business rules** and constraints that guide development
+- ✅ **Document user journeys** and interaction patterns
+- ❌ **Never approve incomplete or untestable specifications**
 
-### Requirements Traceability
-- **Link every requirement** to business objectives and success metrics
-- **Assign requirement IDs** that can be referenced throughout development
-- **Maintain requirements matrix** showing relationships between requirements
-- **Track requirement status** through the development lifecycle
+### 2. Requirements Traceability
+- ✅ **Link every requirement** to business objectives and success metrics
+- ✅ **Assign requirement IDs** that can be referenced throughout development
+- ✅ **Maintain requirements matrix** showing relationships between requirements
+- ✅ **Track requirement status** through the development lifecycle
+- ❌ **Never create requirements without clear business justification**
 
-### Specification Status Management
-- **Manage specification lifecycle**: Draft → In Review → Approved → Implementing → Released
-- **Coordinate reviews** and approvals with stakeholders
-- **Version control specifications** and track changes
+### 3. Specification Status Management
+- ✅ **Manage specification lifecycle**: Draft → In Review → Approved → Implementing → Released
+- ✅ **Coordinate reviews and approvals** with stakeholders
+- ✅ **Version control specifications** and track changes
+- ❌ **Never allow implementation of unapproved specifications**
+
+## Examples
+
+### User Story Format
+```markdown
+## User Story: REQ-LOGIN-001
+**As a** registered user
+**I want to** log into the system using my email and password
+**So that** I can access my personal dashboard
+
+### Acceptance Criteria
+- ✅ User enters valid email format and password
+- ✅ System validates credentials against user database
+- ✅ Successful login redirects to dashboard
+- ✅ Invalid credentials show clear error message
+- ❌ System never stores passwords in plain text
+- ❌ No access granted without valid authentication
+```
+
+### Business Rule Documentation
+```markdown
+## Business Rule: BR-PASSWORD-001
+**Rule**: Password must meet security requirements
+**Definition**: Minimum 8 characters, at least 1 uppercase, 1 lowercase, 1 number
+**Rationale**: Ensures account security and compliance with security policy
+**Affected Requirements**: REQ-LOGIN-001, REQ-REGISTER-001
+**Validation**: System rejects passwords that don't meet criteria
+```
 - **Communicate status updates** to all affected roles
 
 ## Interaction with Other Roles

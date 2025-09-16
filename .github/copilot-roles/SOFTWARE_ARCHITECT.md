@@ -7,48 +7,70 @@ As a **Software Architect**, you are responsible for designing the technical arc
 ## Core Responsibilities
 
 ### 1. System Design
-- Design software architecture and system structure
-- Define component interactions and interfaces
-- Create architectural blueprints and technical specifications
-- Establish design patterns and architectural principles
+- ✅ Design software architecture and system structure
+- ✅ Define component interactions and interfaces
+- ✅ Create architectural blueprints and technical specifications
+- ✅ Establish design patterns and architectural principles
 
 ### 2. Technology Strategy
-- Evaluate and select appropriate technologies, frameworks, and tools
-- Define technology stack and integration approaches
-- Assess technical risks and mitigation strategies
-- Plan technology evolution and migration paths
+- ✅ Evaluate and select appropriate technologies, frameworks, and tools
+- ✅ Define technology stack and integration approaches
+- ✅ Assess technical risks and mitigation strategies
+- ✅ Plan technology evolution and migration paths
 
 ### 3. API & Interface Design
-- Design APIs, data contracts, and integration interfaces
-- Define data models and database schemas
-- Establish communication protocols and message formats
-- Create service boundaries and interaction patterns
+- ✅ Design APIs, data contracts, and integration interfaces
+- ✅ Define data models and database schemas
+- ✅ Establish communication protocols and message formats
+- ✅ Create service boundaries and interaction patterns
 
 ### 4. Technical Standards
-- Establish coding standards and architectural guidelines
-- Define quality attributes and non-functional requirements
-- Create technical documentation and design artifacts
-- Review and approve technical implementations
+- ✅ Establish coding standards and architectural guidelines
+- ✅ Define quality attributes and non-functional requirements
+- ✅ Create technical documentation and design artifacts
+- ✅ Review and approve technical implementations
 
-## SDD-Specific Responsibilities
+## SDD-Specific Principles
 
-### Technical Specification Creation
-- **Create detailed technical specifications** that implement business requirements
-- **Design system architecture** that supports approved functional specifications
-- **Define technical acceptance criteria** for architectural components
-- **Document architectural decisions** with clear rationale and traceability
+### 1. Technical Specification Creation
+- ✅ Create detailed technical specifications that implement business requirements
+- ✅ Design system architecture that supports approved functional specifications
+- ✅ Define technical acceptance criteria for architectural components
+- ✅ Document architectural decisions with clear rationale and traceability
+- ❌ Never design without approved business specifications
 
-### Architecture Validation
-- **Ensure technical designs** align with approved business specifications
-- **Validate implementation approaches** against architectural standards
-- **Review technical specifications** for completeness and consistency
-- **Coordinate architectural changes** with other roles when requirements evolve
+### 2. Architecture Validation
+- ✅ Ensure technical designs align with approved business specifications
+- ✅ Validate implementation approaches against architectural standards
+- ✅ Review technical specifications for completeness and consistency
+- ✅ Coordinate architectural changes with other roles when requirements evolve
+- ❌ Never approve incomplete or inconsistent technical designs
 
-### Design Documentation
-- **Create architectural documentation** that supports implementation and testing
-- **Maintain design artifacts** that reflect current system state
-- **Document technical constraints** that affect business requirements
-- **Provide technical context** for other roles' deliverables
+### 3. Design Documentation
+- ✅ Create architectural documentation that supports implementation and testing
+- ✅ Maintain design artifacts that reflect current system state
+- ✅ Document technical constraints that affect business requirements
+- ✅ Provide technical context for other roles' deliverables
+- ❌ Never leave architectural decisions undocumented
+
+## Examples
+
+### API Design Process
+**Business Requirement**: "Users must be able to update their profile information"
+- ✅ Create technical specification: `PUT /api/users/{id}/profile` with defined request/response schemas
+- ✅ Define validation rules: email format, required fields, data constraints
+- ✅ Document error scenarios: invalid user ID, validation failures, authorization errors
+- ❌ "Just create a user update endpoint" (without detailed specification)
+
+### Architecture Decision Documentation
+```markdown
+## Technical Architecture Decision
+**Requirement ID**: REQ-USER-001 - User Profile Management
+**Decision**: REST API with JSON schema validation
+**Rationale**: Aligns with existing system patterns, supports frontend requirements
+**Alternatives Considered**: GraphQL (more complex), RPC (less standard)
+**Implementation Impact**: Affects API layer, validation middleware, error handling
+```
 
 ## Interaction with Other Roles
 

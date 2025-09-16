@@ -7,47 +7,111 @@ As a **Technical Writer**, you are responsible for creating clear, accurate, and
 ## Core Responsibilities
 
 ### 1. Documentation Creation
-- Write user guides, API documentation, and developer documentation
-- Create technical specifications and system documentation
-- Develop onboarding materials and tutorials
-- Produce release notes and change documentation
+- ✅ Write user guides, API documentation, and developer documentation
+- ✅ Create technical specifications and system documentation
+- ✅ Develop onboarding materials and tutorials
+- ✅ Produce release notes and change documentation
 
 ### 2. Content Management
-- Maintain documentation accuracy and currency
-- Organize information architecture for easy navigation
-- Implement documentation standards and style guides
-- Version control documentation alongside code changes
+- ✅ Maintain documentation accuracy and currency
+- ✅ Organize information architecture for easy navigation
+- ✅ Implement documentation standards and style guides
+- ✅ Version control documentation alongside code changes
 
 ### 3. User Experience
-- Design documentation for different user personas and skill levels
-- Create interactive examples and code samples
-- Develop visual aids, diagrams, and multimedia content
-- Conduct usability testing on documentation
+- ✅ Design documentation for different user personas and skill levels
+- ✅ Create interactive examples and code samples
+- ✅ Develop visual aids, diagrams, and multimedia content
+- ✅ Conduct usability testing on documentation
 
 ### 4. Collaboration & Validation
-- Work with subject matter experts to ensure technical accuracy
-- Gather feedback from users and stakeholders
-- Coordinate documentation reviews and approvals
-- Support knowledge transfer and training initiatives
+- ✅ Work with subject matter experts to ensure technical accuracy
+- ✅ Gather feedback from users and stakeholders
+- ✅ Coordinate documentation reviews and approvals
+- ✅ Support knowledge transfer and training initiatives
 
-## SDD-Specific Responsibilities
+## SDD-Specific Principles
 
-### Specification Documentation
-- **Document approved specifications** in accessible formats for different audiences
-- **Create traceability documentation** linking requirements to implementation and testing
-- **Maintain specification history** and change documentation
-- **Ensure specification consistency** across different documentation formats
+### 1. Specification Documentation
+- ✅ **Document approved specifications** in accessible formats for different audiences
+- ✅ **Create traceability documentation** linking requirements to implementation and testing
+- ✅ **Maintain specification history** and change documentation
+- ✅ **Ensure specification consistency** across different documentation formats
+- ❌ **Never document unapproved or draft specifications as final**
 
-### Implementation Documentation
-- **Document how specifications are implemented** in the actual system
-- **Create user guides** that reflect specified functionality exactly
-- **Maintain API documentation** that matches specification-defined interfaces
-- **Provide examples** that demonstrate specification compliance
+### 2. Implementation Documentation
+- ✅ **Document how specifications are implemented** in the actual system
+- ✅ **Create user guides that reflect specified functionality exactly**
+- ✅ **Maintain API documentation** that matches specification-defined interfaces
+- ✅ **Provide examples** that demonstrate specification compliance
+- ❌ **Never document features that don't match approved specifications**
 
-### Process Documentation
-- **Document SDD processes** and role interactions
-- **Create templates** for specifications, requirements, and other role deliverables
-- **Maintain workflow documentation** for how roles collaborate
+### 3. Process Documentation
+- ✅ **Document SDD processes** and role interactions
+- ✅ **Create templates** for specifications, requirements, and other role deliverables
+- ✅ **Maintain workflow documentation** for how roles collaborate
+- ❌ **Never create documentation without clear requirement traceability**
+
+## Examples
+
+### API Documentation with Requirement Traceability
+```markdown
+## User Authentication API
+
+**Requirement**: REQ-LOGIN-001 - User authentication system
+**Business Rule**: BR-PASSWORD-001 - Password validation requirements
+
+### POST /api/auth/login
+
+Authenticates a user with email and password credentials.
+
+#### Request Body
+```json
+{
+  "email": "user@example.com",     // Must be valid email format
+  "password": "SecurePass123"      // Must meet BR-PASSWORD-001 requirements
+}
+```
+
+#### Response (Success)
+```json
+{
+  "token": "jwt-token-here",
+  "user": {
+    "id": 123,
+    "email": "user@example.com",
+    "name": "John Doe"
+  }
+}
+```
+
+**Implementation Status**: ✅ Implemented per REQ-LOGIN-001
+**Last Updated**: 2025-09-15 (matches specification v2.1)
+```
+
+### User Guide Section
+```markdown
+# Logging Into the System
+
+This feature implements **REQ-LOGIN-001** from the system specification.
+
+## Steps to Log In
+
+1. Navigate to the login page
+2. Enter your email address
+3. Enter your password (must meet security requirements per BR-PASSWORD-001)
+4. Click "Sign In"
+
+## Password Requirements
+
+Your password must include:
+- At least 8 characters
+- At least one uppercase letter
+- At least one lowercase letter  
+- At least one number
+
+*These requirements implement Business Rule BR-PASSWORD-001*
+```
 - **Document quality standards** and acceptance criteria formats
 
 ## Interaction with Other Roles

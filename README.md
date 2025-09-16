@@ -1,6 +1,6 @@
-# Spec-Driven Development (SDD) Template
+# Avanavo SDD Framework
 
-A comprehensive template repository that implements Spec-Driven Development workflows with automated GitHub repository setup, property management, and AI agent integration.
+A comprehensive **role-based agentic framework** for **Spec-Driven Development (SDD)** that provides GitHub Copilot with structured instructions for disciplined, specification-first development across multiple technology stacks.
 
 ## What is Spec-Driven Development (SDD)?
 
@@ -9,196 +9,286 @@ Spec-Driven Development is a methodology where software development is guided by
 ### Core Principles
 
 - **Specification First**: Before any code is written, create detailed specifications that define exactly what needs to be built
-- **Executable Documentation**: Specifications are not just documentation - they drive automated testing, validation, and development workflows  
-- **AI Agent Integration**: AI coding agents use specifications as their primary instruction set for autonomous development
-- **Traceability**: Every feature implementation can be traced back to its originating specification
-- **Consistency**: All team members and AI agents work from the same authoritative source of truth
+- **Role-Based Expertise**: AI agents operate within defined roles (Solution Architect, Business Analyst, Developer, QA, DevOps, Technical Writer) to ensure appropriate expertise and boundaries
+- **Anti-Assumption Protocols**: Agents never add unrequested features or make silent assumptions - they ask for clarification explicitly
+- **Traceability**: Every feature implementation can be traced back to its originating specification with requirement IDs
+- **Deterministic Implementation**: When users agree to specific proposals, agents implement exactly what was agreed upon
 
-## Why Use SDD?
+## Why Use This Framework?
 
-### Traditional Development Challenges
-- Requirements often change or get misunderstood during development
-- Documentation becomes outdated and unreliable
-- Team members have different interpretations of what to build
-- Code reviews focus on implementation details rather than requirement fulfillment
-- AI agents receive inconsistent or incomplete instructions
+### Traditional AI Agent Challenges
+- Agents make assumptions and add unrequested features
+- Inconsistent behavior across different types of work
+- No clear expertise boundaries or escalation paths
+- Implementation differs from what was proposed/agreed upon
+- Lack of requirement traceability
 
-### SDD Solutions
-- **Clarity**: Specifications provide unambiguous requirements that humans and AI agents can follow
-- **Efficiency**: AI agents can autonomously implement features based on clear specifications
-- **Quality**: Automated validation ensures implementations match specifications exactly
-- **Maintainability**: Changes flow from specs to implementation, keeping everything synchronized
-- **Collaboration**: Teams collaborate on specifications before costly implementation begins
+### SDD Framework Solutions
+- **Clear Role Boundaries**: Each agent operates within defined expertise domains with clear responsibilities
+- **Explicit Communication**: Agents state assumptions clearly and ask for clarification when uncertain
+- **Anti-Assumption Protocols**: Strict rules preventing agents from adding unrequested functionality
+- **Deterministic Behavior**: Agents implement exactly what was proposed and agreed upon
+- **Escalation Authority**: Solution Architect role can resolve conflicts and make architectural decisions
 
-## How SDD Works
+## How the Framework Works
 
-### Repository Types
+### Available Roles
 
-**Specification Repositories (`role: spec`)**
-- Contain detailed feature specifications, requirements, and behavioral definitions
-- Serve as the authoritative source of truth for what needs to be built
-- Include acceptance criteria, test scenarios, and validation rules
-- Used by AI agents as instruction sets for autonomous development
+The framework provides **7 industry-standard roles** that GitHub Copilot can assume:
 
-**Feature Repositories (`role: feature`)**  
-- Implement the features defined in specification repositories
-- Reference their parent specification repository via the `spec` property
-- Contain actual code, tests, and implementation artifacts
-- Automatically validated against their parent specifications
+| Role | Expertise | Primary Responsibilities |
+|------|-----------|-------------------------|
+| **Solution Architect** | System architecture, cross-role coordination | Escalation authority, conflict resolution, architectural decisions |
+| **Software Architect** | Technical design, API design | System structure, technology choices, design patterns |
+| **Business Analyst** | Requirements analysis | Functional specifications, user stories, acceptance criteria |
+| **Software Developer** | Implementation | Code writing, unit testing, requirement traceability |
+| **QA Engineer** | Quality assurance, testing | Test planning, validation, quality gates |
+| **DevOps Engineer** | Infrastructure, deployment | CI/CD, monitoring, operational requirements |
+| **Technical Writer** | Documentation | User guides, API docs, process documentation |
 
-### Workflow Overview
+### Role Selection Process
 
-1. **Specification Creation**: Teams create detailed specifications in spec repositories
-2. **Feature Repository Generation**: New feature repositories are created from this template
-3. **Automatic Configuration**: Repositories are automatically configured with appropriate properties
-4. **AI Agent Development**: AI agents read specifications and autonomously implement features
-5. **Validation & Integration**: Implementations are automatically validated against specifications
+1. **User makes request** → Copilot analyzes the request
+2. **Copilot proposes role** → "This appears to be a [ROLE] task. Should I proceed with [ROLE] instructions?"
+3. **User confirms** → Copilot loads role-specific instructions and operates within that role's boundaries
+4. **Role switching** → Available if request changes scope or different expertise is needed
 
-## Template Features
+### Framework Benefits
 
-- 🤖 **Automated Setup**: GitHub Actions workflow that automatically configures repository properties
-- 🔧 **CLI Tools**: Scripts for GitHub authentication and organization setup  
-- 📋 **Custom Properties**: Automated management of SDD-specific repository metadata
-- 🔄 **Template Integration**: Smart detection of template repository relationships
-- 🛡️ **Security**: Proper authentication handling with comprehensive scopes
-- 🎯 **AI Ready**: Designed for seamless AI agent integration and autonomous development
+- 🎯 **Focused Expertise**: Each role provides specialized knowledge and appropriate boundaries
+- � **Anti-Assumption Protocols**: Prevents agents from adding unrequested features or making silent assumptions  
+- � **Deterministic Implementation**: Ensures agents implement exactly what was proposed and agreed upon
+- � **Requirement Traceability**: Every change links back to specific requirements with IDs
+- ⚡ **Escalation Authority**: Solution Architect can resolve conflicts and override constraints when necessary
+- � **Multi-Technology Support**: Works across DevExpress/.NET, Deno, Express, and other technology stacks
 
-## Quick Start
+## Installation & Usage
 
-1. **Use this template** to create a new repository
-2. The repository will be automatically configured with SDD properties on first push
-3. Start developing according to SDD principles
+### Package Distribution (Coming Soon)
 
-For detailed setup instructions, see [Setup Guide](docs/SETUP.md).
+The framework will be available as packages across multiple ecosystems:
 
-## Repository Structure
+- **npm**: `@avanavo/sdd-framework` (JavaScript/TypeScript projects)
+- **NuGet**: `Avanavo.SDD.Framework` (.NET/DevExpress projects)  
+- **Deno**: Available via JSR registry (Deno/Supabase functions)
+
+### Current Usage (GitHub Repository)
+
+1. **Copy the framework files** to your repository:
+   ```bash
+   # Copy the entire .github directory to your project
+   cp -r .github/ /path/to/your/project/
+   ```
+
+2. **Start a conversation with GitHub Copilot**:
+   ```
+   "I need to add user authentication to my application"
+   ```
+
+3. **Copilot will propose a role**:
+   ```
+   "This appears to be a Software Developer task. Should I proceed with Software Developer instructions?"
+   ```
+
+4. **Confirm and begin**:
+   ```
+   "Yes, proceed"
+   ```
+
+5. **Copilot operates within role boundaries**, following SDD principles and asking for specifications
+
+## Framework Structure
 
 ```
-sdd-template/
+avanavo-sdd-template/
 ├── .github/
-│   ├── workflows/
-│   │   └── setup-repository-properties.yml    # Automated property setup
-│   └── COPILOT_INSTRUCTIONS.md               # AI agent guidance
-├── docs/
-│   ├── SETUP.md                              # Comprehensive setup guide
-│   ├── SCRIPTS.md                            # Script documentation  
-│   └── WORKFLOWS.md                          # Workflow documentation
-├── scripts/
-│   ├── delete-test-repos.sh                 # Cleanup utility
-│   ├── github-app-device-flow.sh            # GitHub App authentication
-│   ├── setup-github-auth.sh                 # GitHub CLI authentication
-│   └── setup-org-properties.sh              # Organization property setup
-├── README.md                                 # This file
-└── LICENSE                                   # MIT License
+│   ├── COPILOT_INSTRUCTIONS.md          # Main role-based framework
+│   └── copilot-roles/                   # Role-specific instructions
+│       ├── SOLUTION_ARCHITECT.md        # Technical leadership & escalation
+│       ├── SOFTWARE_ARCHITECT.md        # System design & API architecture  
+│       ├── BUSINESS_ANALYST.md          # Requirements & specifications
+│       ├── SOFTWARE_DEVELOPER.md        # Implementation & coding
+│       ├── QA_ENGINEER.md               # Testing & quality assurance
+│       ├── DEVOPS_ENGINEER.md           # Infrastructure & deployment
+│       └── TECHNICAL_WRITER.md          # Documentation & guides
+├── README.md                            # This documentation
+└── LICENSE                              # MIT License
 ```
 
-## Custom Properties
+## Core Framework Principles
 
-This template automatically configures three custom repository properties that enable the SDD workflow:
+### 1. Spec-First Development
+- ✅ **Verify spec status before coding**
+- ✅ **Reference specific requirement IDs in all work**
+- ❌ **No implementation without approved specifications**
 
-### role
-- **Type**: Single select (spec | feature)
-- **Description**: Defines the repository's role in the SDD workflow
-- **Required**: No
-- **Values**:
-  - `spec`: Repository contains specifications, requirements, and behavioral definitions
-  - `feature`: Repository implements features based on specifications from a parent spec repository
+### 2. Explicit Communication  
+- ✅ **State assumptions clearly**
+- ✅ **Ask for clarification when uncertainty > 10%**
+- ❌ **Never silently infer critical details**
 
-### spec  
-- **Type**: String
-- **Description**: Links feature repositories to their governing specification repository
-- **Required**: No
-- **Usage**:
-  - **Spec repositories**: Leave null/empty (they ARE the specification)
-  - **Feature repositories**: Full repository slug of the parent spec (e.g., `your-org/product-spec`)
+### 3. Anti-Assumption Practices
+- ✅ **Stick to what was explicitly requested**
+- ✅ **Label additions as suggestions**: "You didn't ask for this, but would you like me to suggest..."
+- ❌ **Adding "helpful" features not requested**
+- ❌ **Assuming technology preferences beyond what's stated**
 
-### instructions
-- **Type**: String  
-- **Description**: Points to the template repository containing SDD methodology, documentation, and AI agent instructions
-- **Required**: No
-- **Usage**: Automatically set to the template repository used to create this repo (this repository serves as the instruction source)
-- **Purpose**: AI agents use this to locate their behavioral instructions, development guidelines, and SDD workflow definitions
+### 4. Deterministic Implementation
+- ✅ **When user agrees to a proposal, implement EXACTLY what was proposed**
+- ✅ **Copy exact text from proposals when implementing**
+- ❌ **Never regenerate or "improve" upon agreed content**
 
-## Repository Examples
+### 5. Role Boundaries
+- ✅ **Stay within your role's defined responsibilities**
+- ✅ **Escalate to Solution Architect for cross-role conflicts**
+- ✅ **Respect other roles' expertise domains**
 
-### Specification Repository
-- **Name**: `user-authentication-spec`
-- **Properties**: `role=spec`, `spec=null`, `instructions=YOUR_ORG/sdd-template`
-- **Contains**: User stories, API specifications, security requirements, test scenarios
-- **Purpose**: Define exactly how user authentication should work
+## Example Interactions
 
-### Feature Repository  
-- **Name**: `user-authentication-service`
-- **Properties**: `role=feature`, `spec=YOUR_ORG/user-authentication-spec`, `instructions=YOUR_ORG/sdd-template`
-- **Contains**: Implementation code, tests, deployment configurations
-- **Purpose**: Implement the authentication service according to its specification
+### Business Analyst Role
+```
+User: "I need user authentication functionality"
 
-## AI Agent Integration
+BA: "I'll help create the functional specification for user authentication. 
+     What authentication methods do you require? (email/password, OAuth, 2FA?)
+     What are the security requirements?
+     Should I create user stories with acceptance criteria?"
+```
 
-This template repository serves as the **instruction source** for AI agents working within the SDD workflow. The `instructions` property in every generated repository points back to this template, enabling AI agents to:
+### Software Developer Role  
+```
+User: "Implement the login function"
 
-### Access SDD Guidelines
-- **Location**: `.github/COPILOT_INSTRUCTIONS.md`
-- **Purpose**: Defines how AI agents should operate within SDD workflows
-- **Scope**: Spec-first development, validation protocols, interaction patterns
+Dev: "I need the approved specification for the login functionality. 
+     Could you provide:
+     • The specification document path
+     • Specific requirement ID to implement
+     • Current specification status (should be 'Approved')"
+```
 
-### Understand Repository Context
-- **Property Reading**: AI agents can read the `role`, `spec`, and `instructions` properties to understand their context
-- **Spec Repository Access**: For feature repos, agents can locate and read the governing specification
-- **Template Reference**: The `instructions` property provides the source for methodology and guidelines
+### Solution Architect Role (Escalation)
+```
+Dev: "I'm getting conflicting requirements between the API spec and UI mockups"
 
-### Follow SDD Protocols
-- **Specification First**: Never implement without an approved specification
-- **Traceability**: Every change must reference specification requirements  
-- **Validation**: Automated verification that implementations match specifications
-- **Incremental Development**: Small, reviewable changes with continuous validation
+SA: "I'll analyze this conflict. Let me review both specifications and 
+    make an architectural decision. I'll document the resolution and 
+    update the affected specifications accordingly."
+```
 
-### Example AI Agent Workflow
-1. **Repository Analysis**: Read properties to understand repository role and context
-2. **Specification Loading**: If `role=feature`, load specification from `spec` property repository  
-3. **Instruction Retrieval**: Access SDD guidelines from the `instructions` repository
-4. **Implementation**: Follow spec-driven development protocols for all changes
-5. **Validation**: Verify implementations against specifications before completion
+## Multi-Technology Support
+
+The framework is designed to work seamlessly across different technology stacks:
+
+### DevExpress/.NET Frontend Applications
+- Business Analyst creates specifications for UI components and user workflows
+- Software Architect designs component architecture and data binding patterns
+- Software Developer implements DevExpress controls with requirement traceability
+
+### Deno Functions (Supabase)
+- Business Analyst specifies API requirements and business logic
+- Software Architect designs function architecture and database interactions  
+- Software Developer implements Deno functions with proper error handling
+
+### Express.js APIs
+- Business Analyst defines endpoint specifications and data contracts
+- Software Architect designs API architecture and middleware patterns
+- Software Developer implements routes with validation and documentation
+
+## Advanced Features
+
+### Requirement Traceability
+Every code change includes references to specifications:
+```javascript
+// Implements REQ-AUTH-001: User login validation
+// Business Rule BR-PASSWORD-001: Password complexity requirements
+function validateUserLogin(email, password) {
+    // Implementation with clear requirement links
+}
+```
+
+### Commit Message Standards
+```
+feat: implement user password validation (REQ-AUTH-001)
+
+- Add password strength validation per BR-PASSWORD-001
+- Minimum 8 chars, mixed case, numbers required  
+- Returns clear validation messages for UI
+- Unit tests cover all acceptance criteria
+
+Refs: REQ-AUTH-001, BR-PASSWORD-001
+```
+
+### Test Case Traceability
+```markdown
+## Test Case: TC-AUTH-001
+**Requirement**: REQ-AUTH-001 - User authentication
+**Acceptance Criteria**: AC-AUTH-001.1 - Valid credentials redirect to dashboard
+
+### Test Steps
+1. Navigate to login page
+2. Enter valid credentials
+3. Click login button
+
+### Expected Result
+- User redirected to dashboard
+- Welcome message displays
+- Session established per specification
+```
 
 ## Getting Started
 
-### For Organizations
-1. Fork this template to your organization
-2. Run the setup scripts to configure your GitHub organization
-3. Create specification repositories to define your project requirements
-4. Generate feature repositories from this template to implement specifications
+### 1. Copy Framework to Your Project
+```bash
+# Copy the .github directory to your repository
+cp -r .github/ /path/to/your/project/
 
-### For Developers
-1. Create repositories from this template (they'll be auto-configured)
-2. If creating a spec repository: Define clear, detailed specifications
-3. If creating a feature repository: Implement according to the linked specification
-4. Use AI agents with the specifications as their instruction sets
+# Or download and extract specific files you need
+```
 
-## Documentation
+### 2. Start Using Role-Based Development
+```
+You: "I need to add user authentication"
+Copilot: "This appears to be a Business Analyst task. Should I proceed with Business Analyst instructions?"
+You: "Yes"
+Copilot: [Operates as BA] "I'll help create the user authentication specification..."
+```
 
-- [**Setup Guide**](docs/SETUP.md) - Complete installation and configuration instructions
-- [**Scripts Documentation**](docs/SCRIPTS.md) - Detailed script usage and examples
-- [**Workflows Documentation**](docs/WORKFLOWS.md) - GitHub Actions workflow explanations
+### 3. Switch Roles as Needed
+```
+You: "Now implement the authentication API"  
+Copilot: "This request seems better suited for a Software Developer role. Should I switch to Software Developer for this task?"
+You: "Yes, switch to developer"
+Copilot: [Loads Developer instructions] "I need the approved specification for authentication..."
+```
+
+## Framework Customization
+
+You can customize the framework by modifying:
+- **`.github/COPILOT_INSTRUCTIONS.md`** - Main framework configuration
+- **`.github/copilot-roles/*.md`** - Individual role instructions  
+- **Role triggers** - Keywords that activate specific roles
+- **Examples and templates** - Add project-specific examples
 
 ## Contributing
 
 1. Fork this repository
-2. Create feature branches for improvements
-3. Submit pull requests with clear descriptions
-4. Follow the SDD methodology for all changes
+2. Create feature branches for framework improvements
+3. Test changes with GitHub Copilot interactions
+4. Submit pull requests with clear descriptions
+5. Follow the SDD methodology - create specifications before implementation
 
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
 
-## Support
+## Support & Community
 
-For questions about implementing SDD in your organization or using this template:
-1. Check the documentation in the `docs/` folder
-2. Review existing GitHub Issues for similar questions
-3. Create a new Issue with the `question` label
+- **GitHub Issues**: Report bugs or request features
+- **Discussions**: Share experiences and ask questions
+- **Documentation**: Review role instructions and examples
+- **Examples**: See the framework in action across different technology stacks
 
 ---
 
-**Ready to implement Spec-Driven Development?** Start by reading the [Setup Guide](docs/SETUP.md) to configure your environment.
+**Ready to implement disciplined, specification-driven development?** Copy the `.github` directory to your project and start your first role-based conversation with GitHub Copilot!
 ```

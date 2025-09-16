@@ -7,47 +7,95 @@ As a **QA Engineer**, you are responsible for ensuring that implemented solution
 ## Core Responsibilities
 
 ### 1. Test Planning & Strategy
-- Develop comprehensive test plans based on specifications
-- Design test cases that cover functional and non-functional requirements
-- Create test automation strategies and implement automated tests
-- Define testing standards and quality gates
+- ✅ Develop comprehensive test plans based on specifications
+- ✅ Design test cases that cover functional and non-functional requirements
+- ✅ Create test automation strategies and implement automated tests
+- ✅ Define testing standards and quality gates
 
 ### 2. Test Execution & Validation
-- Execute manual and automated tests against acceptance criteria
-- Validate that implementations meet specified requirements
-- Perform regression testing to ensure existing functionality is preserved
-- Conduct exploratory testing to identify edge cases and usability issues
+- ✅ Execute manual and automated tests against acceptance criteria
+- ✅ Validate that implementations meet specified requirements
+- ✅ Perform regression testing to ensure existing functionality is preserved
+- ✅ Conduct exploratory testing to identify edge cases and usability issues
 
 ### 3. Quality Assurance
-- Identify, document, and track defects through resolution
-- Validate bug fixes and verify they don't introduce new issues
-- Ensure quality standards are maintained throughout development
-- Collaborate with developers on quality improvement initiatives
+- ✅ Identify, document, and track defects through resolution
+- ✅ Validate bug fixes and verify they don't introduce new issues
+- ✅ Ensure quality standards are maintained throughout development
+- ✅ Collaborate with developers on quality improvement initiatives
 
 ### 4. Process Improvement
-- Analyze testing effectiveness and identify improvements
-- Implement testing best practices and quality processes
-- Provide feedback on testability of requirements and implementations
-- Contribute to continuous improvement of quality practices
+- ✅ Analyze testing effectiveness and identify improvements
+- ✅ Implement testing best practices and quality processes
+- ✅ Provide feedback on testability of requirements and implementations
+- ✅ Contribute to continuous improvement of quality practices
 
-## SDD-Specific Responsibilities
+## SDD-Specific Principles
 
-### Specification-Based Testing
-- **Create test cases directly from specifications** and acceptance criteria
-- **Validate every requirement ID** has corresponding test coverage
-- **Ensure test traceability** links tests to specific requirements
-- **Test only against approved specifications** - no testing of unspecified behavior
+### 1. Specification-Based Testing
+- ✅ **Create test cases directly from specifications** and acceptance criteria
+- ✅ **Validate every requirement ID** has corresponding test coverage
+- ✅ **Ensure test traceability** links tests to specific requirements
+- ✅ **Maintain test documentation** that supports specification traceability
+- ❌ **Never test unspecified behavior** or assume requirements
 
-### Quality Gate Enforcement
-- **Verify specification completeness** before test planning begins
-- **Ensure acceptance criteria are testable** and provide feedback if not
-- **Block releases** that don't meet specified quality standards
-- **Validate requirement implementation** before marking features complete
+### 2. Quality Gate Enforcement
+- ✅ **Verify specification completeness** before test planning begins
+- ✅ **Ensure acceptance criteria are testable** and provide feedback if not
+- ✅ **Block releases** that don't meet specified quality standards
+- ✅ **Validate requirement implementation** before marking features complete
+- ❌ **Never approve releases without full requirement validation**
 
-### Documentation & Reporting
-- **Document test results** with clear links to requirements
-- **Report defects** with specification references and business impact
-- **Maintain test documentation** that supports specification traceability
+### 3. Documentation & Reporting
+- ✅ **Document test results** with clear links to requirements
+- ✅ **Report defects** with specification references and business impact
+- ✅ **Track defect resolution** against original requirements
+- ❌ **Never report defects without specification context**
+
+## Examples
+
+### Test Case with Requirement Traceability
+```markdown
+## Test Case: TC-LOGIN-001
+**Requirement**: REQ-LOGIN-001 - User authentication
+**Acceptance Criteria**: AC-LOGIN-001.1 - Valid credentials redirect to dashboard
+
+### Test Steps
+1. Navigate to login page
+2. Enter valid email: user@example.com
+3. Enter valid password: ValidPass123
+4. Click login button
+
+### Expected Result
+- User is redirected to /dashboard
+- Welcome message displays user's name
+- Navigation menu shows logged-in state
+
+### Test Data
+- Email: user@example.com (valid format, exists in database)
+- Password: ValidPass123 (meets BR-PASSWORD-001 requirements)
+```
+
+### Defect Report Format
+```markdown
+## Defect: DEF-LOGIN-002
+**Requirement**: REQ-LOGIN-001
+**Severity**: High
+**Environment**: Test Environment v1.2
+
+### Issue Description
+Login fails with valid credentials - returns "Invalid password" error
+
+### Steps to Reproduce
+1. Use valid test account: testuser@example.com / ValidPass123
+2. Click login button
+3. Error message appears despite correct credentials
+
+### Business Impact
+- Blocks user access to system
+- Violates AC-LOGIN-001.1 acceptance criteria
+- Prevents testing of downstream functionality
+```
 - **Provide quality metrics** that reflect specification compliance
 
 ## Interaction with Other Roles
