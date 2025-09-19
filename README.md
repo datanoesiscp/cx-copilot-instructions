@@ -1,4 +1,4 @@
-# Avanavo SDD Framework
+# CX SDD Framework
 
 A comprehensive **role-based agentic framework** for **Spec-Driven Development (SDD)** that provides GitHub Copilot with structured instructions for disciplined, specification-first development across multiple technology stacks.
 
@@ -68,8 +68,8 @@ The framework provides **7 industry-standard roles** that GitHub Copilot can ass
 
 The framework will be available as packages across multiple ecosystems:
 
-- **npm**: `@avanavo/sdd-framework` (JavaScript/TypeScript projects)
-- **NuGet**: `Avanavo.SDD.Framework` (.NET/DevExpress projects)  
+- **npm**: `@CX/sdd-framework` (JavaScript/TypeScript projects)
+- **NuGet**: `CX.SDD.Framework` (.NET/DevExpress projects)  
 - **Deno**: Available via JSR registry (Deno/Supabase functions)
 
 ### Current Usage (GitHub Repository)
@@ -100,7 +100,7 @@ The framework will be available as packages across multiple ecosystems:
 ## Framework Structure
 
 ```
-avanavo-sdd-template/
+CX-sdd-template/
 ├── .github/
 │   ├── COPILOT_INSTRUCTIONS.md          # Main role-based framework
 │   └── copilot-roles/                   # Role-specific instructions
